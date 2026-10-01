@@ -1,0 +1,1 @@
+console.log("FoodLens JavaScript 已成功載入");
