@@ -6,6 +6,7 @@
   <title>FoodLens｜食品營養查詢</title>
   <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
   <header class="site-header">
     <div class="container header-content">
@@ -32,18 +33,21 @@
       <div class="container">
         <p class="hero-tag">FoodLens 食品營養查詢</p>
         <h1>今天想查什麼食品？</h1>
+
         <p class="hero-description">
           輸入食品名稱，快速查看營養資訊，吃得更清楚、更安心。
         </p>
 
         <form class="search-form">
           <label class="sr-only" for="foodKeyword">食品名稱</label>
+
           <input
             id="foodKeyword"
             name="foodKeyword"
             type="search"
             placeholder="搜尋食品名稱，例如：豆漿、餅乾、雞蛋"
           >
+
           <button type="submit">搜尋</button>
         </form>
 
@@ -61,9 +65,15 @@
       </div>
     </section>
 
-    <section id="results" class="container results-section" aria-labelledby="results-title">
+    <section
+      id="results"
+      class="container results-section"
+      aria-labelledby="results-title"
+    >
       <div class="results-heading">
-        <h2 id="results-title">推薦食品 <span>3</span> 筆</h2>
+        <h2 id="results-title">
+          推薦食品 <span>3</span> 筆
+        </h2>
 
         <label class="sort-label">
           排序
@@ -91,10 +101,12 @@
               <dt>熱量</dt>
               <dd>35 <small>kcal</small></dd>
             </div>
+
             <div class="metric metric-sugar">
               <dt>糖</dt>
               <dd>0 <small>g</small></dd>
             </div>
+
             <div class="metric metric-sodium">
               <dt>鈉</dt>
               <dd>45 <small>mg</small></dd>
@@ -116,10 +128,12 @@
               <dt>熱量</dt>
               <dd>198.9 <small>kcal</small></dd>
             </div>
+
             <div class="metric metric-sugar">
               <dt>糖</dt>
               <dd>4 <small>g</small></dd>
             </div>
+
             <div class="metric metric-sodium">
               <dt>鈉</dt>
               <dd>603 <small>mg</small></dd>
@@ -141,10 +155,12 @@
               <dt>熱量</dt>
               <dd>460 <small>kcal</small></dd>
             </div>
+
             <div class="metric metric-sugar">
               <dt>糖</dt>
               <dd>3 <small>g</small></dd>
             </div>
+
             <div class="metric metric-sodium">
               <dt>鈉</dt>
               <dd>650 <small>mg</small></dd>
@@ -156,7 +172,11 @@
 
     <section id="knowledge" class="container reminder">
       <h2>比較前先確認營養基準</h2>
-      <p>FoodLens 只比較相同基準的食品資料，例如每 100 g 與每 100 g，避免造成誤解。</p>
+
+      <p>
+        FoodLens 只比較相同基準的食品資料，例如每 100 g 與每 100 g，
+        避免造成誤解。
+      </p>
     </section>
   </main>
 
@@ -165,5 +185,47 @@
       FoodLens｜資料來源：衛生福利部食品藥物管理署公開資料
     </div>
   </footer>
+
+  <script>
+    const searchForm = document.querySelector(".search-form");
+    const foodKeyword = document.querySelector("#foodKeyword");
+    const foodRows = document.querySelectorAll(".food-row");
+    const resultCount = document.querySelector("#results-title span");
+    const foodResults = document.querySelector(".food-results");
+
+    const emptyMessage = document.createElement("p");
+    emptyMessage.className = "empty-message";
+    emptyMessage.textContent =
+      "\u627e\u4e0d\u5230\u7b26\u5408\u689d\u4ef6\u7684\u98df\u54c1\u3002";
+    emptyMessage.hidden = true;
+
+    foodResults.after(emptyMessage);
+
+    function filterFoods(keyword) {
+      const normalizedKeyword = keyword.trim().toLowerCase();
+      let visibleCount = 0;
+
+      foodRows.forEach((foodRow) => {
+        const foodText = foodRow.textContent.toLowerCase();
+        const isMatched =
+          normalizedKeyword === "" ||
+          foodText.includes(normalizedKeyword);
+
+        foodRow.style.display = isMatched ? "" : "none";
+
+        if (isMatched) {
+          visibleCount += 1;
+        }
+      });
+
+      resultCount.textContent = visibleCount;
+      emptyMessage.hidden = visibleCount !== 0;
+    }
+
+    searchForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      filterFoods(foodKeyword.value);
+    });
+  </script>
 </body>
 </html>
