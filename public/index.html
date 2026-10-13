@@ -186,46 +186,132 @@
     </div>
   </footer>
 
-  <script>
-    const searchForm = document.querySelector(".search-form");
-    const foodKeyword = document.querySelector("#foodKeyword");
-    const foodRows = document.querySelectorAll(".food-row");
-    const resultCount = document.querySelector("#results-title span");
-    const foodResults = document.querySelector(".food-results");
+ <script>
+  const searchForm = document.querySelector(".search-form");
+  const foodKeyword = document.querySelector("#foodKeyword");
+  const resultCount = document.querySelector("#results-title span");
+  const foodResults = document.querySelector(".food-results");
+  const searchButton = searchForm.querySelector("button");
 
-    const emptyMessage = document.createElement("p");
-    emptyMessage.className = "empty-message";
-    emptyMessage.textContent =
-      "\u627e\u4e0d\u5230\u7b26\u5408\u689d\u4ef6\u7684\u98df\u54c1\u3002";
-    emptyMessage.hidden = true;
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
-    foodResults.after(emptyMessage);
+  function displayValue(value) {
+    return value === null || value === undefined ? "—" : value;
+  }
 
-    function filterFoods(keyword) {
-      const normalizedKeyword = keyword.trim().toLowerCase();
-      let visibleCount = 0;
-
-      foodRows.forEach((foodRow) => {
-        const foodText = foodRow.textContent.toLowerCase();
-        const isMatched =
-          normalizedKeyword === "" ||
-          foodText.includes(normalizedKeyword);
-
-        foodRow.style.display = isMatched ? "" : "none";
-
-        if (isMatched) {
-          visibleCount += 1;
-        }
-      });
-
-      resultCount.textContent = visibleCount;
-      emptyMessage.hidden = visibleCount !== 0;
+  function formatBasis(food) {
+    if (food.basis_type === "per_100g") {
+      return "每 100 g";
     }
 
-    searchForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      filterFoods(foodKeyword.value);
-    });
-  </script>
+    if (food.basis_type === "per_100ml") {
+      return "每 100 mL";
+    }
+
+    return `每份 ${displayValue(food.basis_amount)} ${escapeHtml(
+      food.basis_unit
+    )}`;
+  }
+
+  function renderFoods(foods) {
+    resultCount.textContent = foods.length;
+
+    if (foods.length === 0) {
+      foodResults.innerHTML =
+        '<p class="empty-message">找不到符合條件的食品。</p>';
+      return;
+    }
+
+    foodResults.innerHTML = foods
+      .map((food) => {
+        const category = food.category_name || "未分類";
+        const company =
+          food.company_name || food.brand_name || "未提供廠商";
+
+        return `
+          <article class="food-row">
+            <div class="food-info">
+              <p class="food-category">${escapeHtml(category)}</p>
+              <h3>${escapeHtml(food.food_name)}</h3>
+              <p>${escapeHtml(company)}</p>
+            </div>
+
+            <p class="basis">${formatBasis(food)}</p>
+
+            <dl class="nutrition-summary">
+              <div class="metric metric-calories">
+                <dt>熱量</dt>
+                <dd>
+                  ${displayValue(food.calories_kcal)}
+                  <small>kcal</small>
+                </dd>
+              </div>
+
+              <div class="metric metric-sugar">
+                <dt>糖</dt>
+                <dd>
+                  ${displayValue(food.sugar_g)}
+                  <small>g</small>
+                </dd>
+              </div>
+
+              <div class="metric metric-sodium">
+                <dt>鈉</dt>
+                <dd>
+                  ${displayValue(food.sodium_mg)}
+                  <small>mg</small>
+                </dd>
+              </div>
+            </dl>
+          </article>
+        `;
+      })
+      .join("");
+  }
+
+  async function loadFoods(keyword = "") {
+    const apiUrl = new URL("./api/foods", window.location.href);
+    apiUrl.searchParams.set("q", keyword);
+
+    searchButton.disabled = true;
+    searchButton.textContent = "查詢中";
+    foodResults.innerHTML =
+      '<p class="loading-message">食品資料載入中。</p>';
+
+    try {
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      renderFoods(data.foods);
+    } catch (error) {
+      console.error("Food API request failed:", error);
+
+      resultCount.textContent = "0";
+      foodResults.innerHTML =
+        '<p class="empty-message">目前無法載入食品資料，請稍後再試。</p>';
+    } finally {
+      searchButton.disabled = false;
+      searchButton.textContent = "搜尋";
+    }
+  }
+
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    loadFoods(foodKeyword.value.trim());
+  });
+
+  loadFoods();
+</script>
 </body>
 </html>
