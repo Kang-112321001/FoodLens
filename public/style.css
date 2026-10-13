@@ -1,9 +1,505 @@
-body {
-  font-family: Arial, "Microsoft JhengHei", sans-serif;
-  margin: 40px;
-  background-color: #f5f7f5;
+:root {
+  --teal: #075968;
+  --teal-light: #dff3ef;
+  --yellow: #f6cb52;
+  --cream: #fffdf7;
+  --surface: #ffffff;
+  --text: #12313c;
+  --muted: #63717a;
+  --border: #e7e5dc;
+  --calories: #fff0e8;
+  --sugar: #eaf5ff;
+  --sodium: #eaf7ec;
 }
 
-h1 {
-  color: #2f6b4f;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--cream);
+  font-family: Arial, "Microsoft JhengHei", sans-serif;
+  line-height: 1.5;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  width: min(100% - 2rem, 1280px);
+  margin: 0 auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255, 253, 247, 0.96);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  min-height: 76px;
+  gap: 2rem;
+}
+
+.brand {
+  color: var(--teal);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.brand-mark {
+  color: var(--yellow);
+  font-size: 1.6rem;
+}
+
+.main-nav,
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.7rem;
+}
+
+.main-nav {
+  flex: 1;
+}
+
+.main-nav a {
+  padding: 1.7rem 0 1.3rem;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.main-nav .is-active {
+  color: var(--teal);
+  border-bottom: 3px solid var(--yellow);
+}
+
+.header-actions {
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.login-button {
+  padding: 0.7rem 1rem;
+  background: var(--teal-light);
+  border-radius: 999px;
+}
+
+/* Hero */
+.hero {
+  padding: 4.5rem 0 2.5rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 5% 15%, #dff5f0 0 110px, transparent 111px),
+    radial-gradient(circle at 96% 10%, #fff4ca 0 80px, transparent 81px),
+    var(--cream);
+}
+
+.hero .container {
+  text-align: center;
+}
+
+.hero-tag {
+  margin: 0 0 0.7rem;
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.hero h1 {
+  margin: 0;
+  color: var(--teal);
+  font-size: clamp(2.6rem, 7vw, 4.8rem);
+  line-height: 1.15;
+  letter-spacing: -3px;
+}
+
+.hero-description {
+  margin: 1rem auto 2rem;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.search-form {
+  display: flex;
+  width: min(100%, 970px);
+  margin: 0 auto;
+  padding: 0.45rem;
+  background: var(--surface);
+  border: 1px solid #dbe0df;
+  border-radius: 20px;
+  box-shadow: 0 10px 28px rgba(18, 49, 60, 0.1);
+}
+
+.search-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  color: var(--text);
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+.search-form button {
+  border: 0;
+  padding: 0.85rem 2.5rem;
+  color: #222b2f;
+  background: var(--yellow);
+  border-radius: 15px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.category-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.category {
+  padding: 0.65rem 1rem;
+  color: var(--teal);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.category.is-selected {
+  color: white;
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+/* Results */
+.results-section {
+  padding: 2.5rem 0 4rem;
+}
+
+.results-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.results-heading h2 {
+  margin: 0;
+  font-size: 1.55rem;
+}
+
+.results-heading h2 span {
+  color: var(--teal);
+}
+
+.sort-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+}
+
+.sort-label select {
+  padding: 0.55rem 0.8rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+
+.food-results {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.food-row {
+  display: grid;
+  grid-template-columns: minmax(210px, 1fr) auto minmax(380px, 1.2fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem 1.4rem;
+  background: var(--surface);
+  border: 1px solid #eee9dd;
+  border-radius: 18px;
+  box-shadow: 0 7px 18px rgba(18, 49, 60, 0.04);
+}
+
+.food-category {
+  display: inline-block;
+  margin: 0 0 0.4rem;
+  padding: 0.2rem 0.6rem;
+  color: var(--teal);
+  background: var(--teal-light);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.food-info h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.food-info p:last-child {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.basis {
+  margin: 0;
+  padding: 0.4rem 0.7rem;
+  color: var(--muted);
+  background: #f7f7f4;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.nutrition-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.metric {
+  padding: 0.65rem 0.8rem;
+  border-radius: 13px;
+}
+
+.metric-calories {
+  background: var(--calories);
+}
+
+.metric-sugar {
+  background: var(--sugar);
+}
+
+.metric-sodium {
+  background: var(--sodium);
+}
+
+.metric dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.metric dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.metric small {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.reminder {
+  margin-bottom: 3rem;
+  padding: 1.3rem 1.5rem;
+  background: #eff9f5;
+  border-radius: 18px;
+}
+
+.reminder h2 {
+  margin: 0;
+  color: var(--teal);
+  font-size: 1.1rem;
+}
+
+.reminder p {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+}
+
+.site-footer {
+  padding: 1.5rem 0;
+  color: var(--muted);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+/* Mobile */
+@media (max-width: 850px) {
+  .header-content {
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    padding: 0.8rem 0;
+  }
+
+  .brand {
+    font-size: 1.7rem;
+  }
+
+  .main-nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .main-nav a {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+
+  .header-actions {
+    margin-left: auto;
+    font-size: 0.85rem;
+  }
+
+  .header-actions > a:first-child {
+    display: none;
+  }
+
+  .food-row {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  .basis {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .container {
+    width: min(100% - 1.25rem, 1280px);
+  }
+
+  .hero {
+    padding-top: 3rem;
+  }
+
+  .hero h1 {
+    letter-spacing: -2px;
+  }
+
+  .search-form {
+    border-radius: 16px;
+  }
+
+  .search-form button {
+    padding: 0.85rem 1rem;
+  }
+
+  .category-list {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.4rem;
+  }
+
+  .category {
+    white-space: nowrap;
+  }
+
+  .results-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nutrition-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .metric {
+    padding: 0.55rem;
+  }
+
+  .metric dd {
+    font-size: 1rem;
+  }
+
+  .header-actions {
+    display: none;
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cream: #0f1a1e;
+    --surface: #18282e;
+    --text: #edf6f4;
+    --muted: #a9b9bc;
+    --border: #31444a;
+    --teal: #68d2c5;
+    --teal-light: #203d3d;
+    --yellow: #f6cb52;
+    --calories: #493027;
+    --sugar: #20394b;
+    --sodium: #23432e;
+  }
+
+  .site-header {
+    background: rgba(15, 26, 30, 0.96);
+  }
+
+  .hero {
+    background:
+      radial-gradient(circle at 5% 15%, #173a38 0 110px, transparent 111px),
+      radial-gradient(circle at 96% 10%, #493f20 0 80px, transparent 81px),
+      var(--cream);
+  }
+
+  .search-form,
+  .food-row {
+    border-color: var(--border);
+  }
+
+  .search-form button {
+    color: #222b2f;
+  }
+
+  .basis {
+    color: var(--muted);
+    background: #243439;
+  }
+
+  .reminder {
+    background: #19312e;
+  }
+
+  .sort-label select {
+    color: var(--text);
+    background: var(--surface);
+  }
 }
