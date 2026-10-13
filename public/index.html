@@ -2,12 +2,168 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>FoodLens</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodLens｜食品營養查詢</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <h1>FoodLens 智慧食品辨識與營養紀錄系統</h1>
-  <p>此網站用於查詢食品營養資訊與比較食品。</p>
-  <script src="app.js"></script>
+  <header class="site-header">
+    <div class="container header-content">
+      <a class="brand" href="./">
+        <span class="brand-mark">●</span>
+        FoodLens
+      </a>
+
+      <nav class="main-nav" aria-label="主要導覽">
+        <a class="is-active" href="#search">食品搜尋</a>
+        <a href="#knowledge">飲食知識</a>
+        <a href="#about">關於我們</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#favorites">我的收藏</a>
+        <a class="login-button" href="#login">登入／註冊</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="search" class="hero">
+      <div class="container">
+        <p class="hero-tag">FoodLens 食品營養查詢</p>
+        <h1>今天想查什麼食品？</h1>
+        <p class="hero-description">
+          輸入食品名稱，快速查看營養資訊，吃得更清楚、更安心。
+        </p>
+
+        <form class="search-form">
+          <label class="sr-only" for="foodKeyword">食品名稱</label>
+          <input
+            id="foodKeyword"
+            name="foodKeyword"
+            type="search"
+            placeholder="搜尋食品名稱，例如：豆漿、餅乾、雞蛋"
+          >
+          <button type="submit">搜尋</button>
+        </form>
+
+        <div class="category-list" aria-label="食品分類">
+          <button class="category is-selected" type="button">全部</button>
+          <button class="category" type="button">主食類</button>
+          <button class="category" type="button">肉類</button>
+          <button class="category" type="button">海鮮類</button>
+          <button class="category" type="button">蔬菜類</button>
+          <button class="category" type="button">水果類</button>
+          <button class="category" type="button">乳品類</button>
+          <button class="category" type="button">飲品類</button>
+          <button class="category" type="button">點心零食</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="container results-section" aria-labelledby="results-title">
+      <div class="results-heading">
+        <h2 id="results-title">推薦食品 <span>3</span> 筆</h2>
+
+        <label class="sort-label">
+          排序
+          <select>
+            <option>相關性最高</option>
+            <option>熱量由低到高</option>
+            <option>糖由低到高</option>
+            <option>鈉由低到高</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="food-results">
+        <article class="food-row">
+          <div class="food-info">
+            <p class="food-category">飲品類</p>
+            <h3>無糖豆漿</h3>
+            <p>範例食品公司</p>
+          </div>
+
+          <p class="basis">每 100 mL</p>
+
+          <dl class="nutrition-summary">
+            <div class="metric metric-calories">
+              <dt>熱量</dt>
+              <dd>35 <small>kcal</small></dd>
+            </div>
+            <div class="metric metric-sugar">
+              <dt>糖</dt>
+              <dd>0 <small>g</small></dd>
+            </div>
+            <div class="metric metric-sodium">
+              <dt>鈉</dt>
+              <dd>45 <small>mg</small></dd>
+            </div>
+          </dl>
+        </article>
+
+        <article class="food-row">
+          <div class="food-info">
+            <p class="food-category">蛋類製品</p>
+            <h3>蛋小白雞蛋干 120g－原味</h3>
+            <p>加茂食品有限公司</p>
+          </div>
+
+          <p class="basis">每份 90 g</p>
+
+          <dl class="nutrition-summary">
+            <div class="metric metric-calories">
+              <dt>熱量</dt>
+              <dd>198.9 <small>kcal</small></dd>
+            </div>
+            <div class="metric metric-sugar">
+              <dt>糖</dt>
+              <dd>4 <small>g</small></dd>
+            </div>
+            <div class="metric metric-sodium">
+              <dt>鈉</dt>
+              <dd>603 <small>mg</small></dd>
+            </div>
+          </dl>
+        </article>
+
+        <article class="food-row">
+          <div class="food-info">
+            <p class="food-category">零食類</p>
+            <h3>原味蘇打餅乾</h3>
+            <p>範例食品公司</p>
+          </div>
+
+          <p class="basis">每 100 g</p>
+
+          <dl class="nutrition-summary">
+            <div class="metric metric-calories">
+              <dt>熱量</dt>
+              <dd>460 <small>kcal</small></dd>
+            </div>
+            <div class="metric metric-sugar">
+              <dt>糖</dt>
+              <dd>3 <small>g</small></dd>
+            </div>
+            <div class="metric metric-sodium">
+              <dt>鈉</dt>
+              <dd>650 <small>mg</small></dd>
+            </div>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <section id="knowledge" class="container reminder">
+      <h2>比較前先確認營養基準</h2>
+      <p>FoodLens 只比較相同基準的食品資料，例如每 100 g 與每 100 g，避免造成誤解。</p>
+    </section>
+  </main>
+
+  <footer id="about" class="site-footer">
+    <div class="container">
+      FoodLens｜資料來源：衛生福利部食品藥物管理署公開資料
+    </div>
+  </footer>
 </body>
 </html>
