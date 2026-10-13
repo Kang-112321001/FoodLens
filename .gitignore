@@ -1,2 +1,24 @@
+# Node.js 套件
 node_modules/
+
+# 建置產物
+dist/
+build/
+
+# 環境變數與密鑰
 .env
+.env.local
+.env.*.local
+*.pfx
+*.key
+*.pem
+
+# 編輯器與系統檔案
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 日誌與暫存檔
+*.log
+npm-debug.log*
+*.tmp
