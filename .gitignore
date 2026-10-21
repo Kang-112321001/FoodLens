@@ -1,24 +1,38 @@
-# Node.js 套件
+
+# Node.js
 node_modules/
 
-# 建置產物
+# Build
 dist/
 build/
 
-# 環境變數與密鑰
+# Environment variables and TLS private keys
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 *.pfx
+*.p12
 *.key
 *.pem
 
-# 編輯器與系統檔案
+# SQLite database and temporary files
+database/*.db
+database/*.sqlite
+database/*.sqlite3
+database/*-wal
+database/*-shm
+database/*-journal
+
+# Raw Open Data and import reports
+data/
+!data/.gitkeep
+
+# Editor and OS files
 .vscode/
 .DS_Store
 Thumbs.db
 
-# 日誌與暫存檔
+# Logs and temporary files
 *.log
 npm-debug.log*
 *.tmp

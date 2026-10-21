@@ -345,15 +345,3 @@ DOM：將食品資料轉換成食品卡片，並更新搜尋結果筆數。
 4. 不將 Secret 或資料庫密碼放入前端。
 5. 保留目前 HTML 與 CSS 的版面設計。
 ```
-
-## 十三、本週學習總結
-
-本週將 W05 的 DOM 互動加入網路請求，完成以下流程：
-
-```text
-Event → Function → fetch → HTTP API → JSON → render Function → DOM → UI
-```
-
-我理解瀏覽器不能直接查詢 SQLite，因此需要由 Express 接收 HTTP Request、查詢資料庫並回傳 JSON。前端再使用 `fetch()` 取得 JSON，最後由 `renderFoods()` 更新畫面。
-
-我也能分辨 HTTP Error、Network Error、JSON Error、DOM Render Error 與 CORS Error，並知道 CORS 是否發生要先比較前端與 API 的 Origin。

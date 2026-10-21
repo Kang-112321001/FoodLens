@@ -142,6 +142,152 @@ https://demo.wke.ncnu.edu.tw/s112321001/
 8. Express API 以 JSON 格式回傳查詢結果。
 9. 前端 JavaScript 將查詢結果更新到頁面中。
 
+## SQLite 資料庫建置與重建（W6）
+
+### 資料庫架構
+
+FoodLens 使用 SQLite 儲存食品、營養、會員及匯入紀錄。
+
+資料庫包含六張資料表：
+
+| 資料表 | 用途 |
+|---|---|
+| Foods | 儲存食品基本資訊及追溯碼 |
+| FoodNutrition | 儲存不同基準的營養資料 |
+| Users | 儲存會員資料 |
+| Favorites | 儲存會員收藏 |
+| Sessions | 儲存會員登入 Session |
+| ImportRuns | 記錄每次資料匯入結果 |
+
+資料庫使用 Primary Key、Foreign Key、UNIQUE、CHECK 及 INDEX 維持資料完整性，並在資料庫連線中啟用外鍵檢查。
+
+### 資料庫初始化
+
+在專案根目錄執行：
+
+```powershell
+node scripts/init-db.js
+```
+
+程式會讀取 `database/schema.sql`，建立 SQLite 資料表。
+
+資料庫檔案：
+
+```text
+database/foodlens.db
+```
+
+### 匯入食品資料
+
+首先將官方公開資料解壓縮，確認 CSV 位於：
+
+```text
+data/extracted/188_2.csv
+```
+
+匯入最多 2,000 筆有效食品：
+
+```powershell
+node scripts/import-test-data.js
+```
+
+匯入完整資料：
+
+```powershell
+node scripts/import-test-data.js --all
+```
+
+匯入程式會進行欄位對應、數值解析、單位判斷與無效資料排除，並保存食品及營養原始文字。
+
+使用食品追溯碼進行 Upsert，避免重複新增相同食品。
+
+匯入時使用 SQLite Transaction，發生資料庫操作錯誤時執行 ROLLBACK，避免部分成功資料覆蓋既有可用資料。
+
+每次成功匯入後，會將結果寫入 ImportRuns，並產生：
+
+```text
+data/import-report.json
+```
+
+### 匯入結果檢查
+
+執行：
+
+```powershell
+node scripts/check-import.js
+```
+
+可檢查食品資料筆數、營養資料筆數、熱量缺值與孤兒資料。
+
+2026 年 10 月 21 日測試結果：
+
+| 項目 | 筆數 |
+|---|---:|
+| Foods | 2,000 |
+| 每 100 公克營養資料 | 1,776 |
+| 每 100 毫升營養資料 | 2 |
+| 每份營養資料 | 2,000 |
+| 孤兒營養資料 | 0 |
+
+重複匯入時，程式顯示新增食品 0 筆、更新食品 2,000 筆。
+
+### 原始資料品質分析
+
+執行：
+
+```powershell
+node scripts/profile-data.js
+```
+
+產生品質摘要：
+
+| 項目 | 結果 |
+|---|---:|
+| 原始資料總筆數 | 50,650 |
+| CSV 欄位數量 | 54 |
+| 重複追溯碼筆數 | 0 |
+| 非數字營養欄位值 | 144,448 |
+
+完整品質報告儲存於：
+
+```text
+data/profile-report.json
+```
+
+非數字營養欄位值可能包含空值、文字標示及特殊數值格式，不直接代表錯誤食品筆數。
+
+### 資料庫備份與重新建立
+
+重建前先備份現有資料庫：
+
+```powershell
+Copy-Item .\database\foodlens.db .\database\foodlens-backup.db
+```
+
+如需建立全新資料庫，應先確認備份完成，再將原資料庫移至其他位置，然後執行：
+
+```powershell
+node scripts/init-db.js
+node scripts/import-test-data.js
+node scripts/check-import.js
+```
+
+上述流程會建立資料表、匯入測試食品資料並檢查結果。
+
+注意：重新建立資料庫會失去原資料庫中的會員、收藏及飲食相關資料，因此正式使用時應優先採用備份及更新匯入，不直接刪除現有資料庫。
+
+### 資料安全
+
+以下檔案不放置於 `public` 目錄，也不提交至 Git：
+
+- SQLite 資料庫及備份。
+- 原始 CSV、ZIP 資料。
+- TLS 私鑰與憑證。
+- `.env` 環境設定。
+- 資料品質及匯入報告。
+
+透過 `.gitignore` 排除上述檔案，避免將資料庫及敏感資訊公開。
+
 ## 營養比較限制
 
 FoodLens 的比較功能用於協助使用者比較相近食品的營養資訊，不用來判定某項食品絕對較健康。
