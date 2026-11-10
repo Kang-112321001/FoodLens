@@ -1,0 +1,50 @@
+﻿<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>W10 瀏覽器儲存比較｜FoodLens</title>
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./components.css">
+
+<main class="container root-content">
+  <p><a href="./">← 回 FoodLens</a></p>
+  <h1>W10 瀏覽器儲存比較</h1>
+  <form id="storageForm">
+    <label>測試暱稱 <input id="nickname" required maxlength="30"></label>
+    <button type="submit">儲存到三種位置</button>
+  </form>
+  <dl>
+    <dt>Cookie</dt><dd id="cookieValue"></dd>
+    <dt>LocalStorage</dt><dd id="localValue"></dd>
+    <dt>SessionStorage</dt><dd id="sessionValue"></dd>
+  </dl>
+</main>
+
+<script>
+  const key = "foodlens_w10_nickname";
+  const cookiePath = new URL("./", location.href).pathname;
+
+  function showValues() {
+    const cookie = document.cookie.split("; ")
+      .find(entry => entry.startsWith(`${key}=`));
+    document.querySelector("#cookieValue").textContent =
+      cookie ? decodeURIComponent(cookie.slice(key.length + 1)) : "尚無資料";
+    document.querySelector("#localValue").textContent =
+      localStorage.getItem(key) ?? "尚無資料";
+    document.querySelector("#sessionValue").textContent =
+      sessionStorage.getItem(key) ?? "尚無資料";
+  }
+
+  document.querySelector("#storageForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const name = document.querySelector("#nickname").value.trim();
+    if (!name) return;
+    localStorage.setItem(key, name);
+    sessionStorage.setItem(key, name);
+    document.cookie = `${key}=${encodeURIComponent(name)}; Path=${cookiePath}; SameSite=Lax`;
+    showValues();
+  });
+
+  showValues();
+</script>
+</html>
