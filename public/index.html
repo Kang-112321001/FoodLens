@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FoodLens｜食品營養查詢</title>
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./components.css">
 </head>
 
 <body>
@@ -23,7 +24,7 @@
 
       <div class="header-actions">
         <a href="#favorites">我的收藏</a>
-        <a class="login-button" href="#login">登入／註冊</a>
+        <a class="login-button" href="./register.html">登入／註冊</a>
       </div>
     </div>
   </header>
@@ -178,6 +179,21 @@
         避免造成誤解。
       </p>
     </section>
+    <section id="rootDashboard" class="container root-dashboard">
+      <aside class="root-sidebar" aria-label="側邊導覽">
+        <h2 id="rootNavigationHeading">公開資料導覽</h2>
+        <nav id="rootNavigation" aria-labelledby="rootNavigationHeading"></nav>
+        <section id="memberNavigation" aria-label="會員功能" hidden></section>
+      </aside>
+
+      <section class="root-content" aria-labelledby="dashboardHeading">
+        <h2 id="dashboardHeading">公開資料總覽</h2>
+        <div id="dashboardCards"></div>
+        <p id="rootStatus" role="status"></p>
+        <div id="rootDetail"></div>
+      </section>
+    </section>
+
   </main>
 
   <footer id="about" class="site-footer">
@@ -270,6 +286,24 @@
                 </dd>
               </div>
             </dl>
+          <details class="food-detail">
+              <summary>查看完整營養</summary>
+              ${food.front_photo_url ? `
+                <img src="${escapeHtml(food.front_photo_url)}"
+                     alt="${escapeHtml(food.food_name)}的正面包裝照"
+                     width="240" style="max-width:100%;height:auto"
+                     loading="lazy" referrerpolicy="no-referrer">
+              ` : ""}
+              <dl>
+                <dt>廠商</dt><dd>${escapeHtml(company)}</dd>
+                <dt>營養基準</dt><dd>${formatBasis(food)}</dd>
+                <dt>熱量</dt><dd>${food.calories_kcal == null ? "—" : escapeHtml(food.calories_kcal) + " kcal"}</dd>
+                <dt>蛋白質</dt><dd>${food.protein_g == null ? "—" : escapeHtml(food.protein_g) + " g"}</dd>
+                <dt>脂肪</dt><dd>${food.fat_g == null ? "—" : escapeHtml(food.fat_g) + " g"}</dd>
+                <dt>糖</dt><dd>${food.sugar_g == null ? "—" : escapeHtml(food.sugar_g) + " g"}</dd>
+                <dt>鈉</dt><dd>${food.sodium_mg == null ? "—" : escapeHtml(food.sodium_mg) + " mg"}</dd>
+              </dl>
+            </details>
           </article>
         `;
       })
@@ -313,5 +347,6 @@
 
   loadFoods();
 </script>
+  <script src="./app.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>會員註冊｜FoodLens</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./components.css">
+  <style>
+    main { width: min(32rem, calc(100% - 2rem)); margin: 3rem auto; }
+    #login { width: 100%; }
+    #registerForm label, #registerForm input { display: block; }
+    #registerForm input { width: 100%; padding: .65rem; margin-top: .3rem; }
+    #registerForm input[aria-invalid="true"] { border-color: #b42318; }
+    #registerForm span { color: #b42318; }
+  </style>
+  <script src="./register.js" defer></script>
+</head>
+<body>
+  <main>
+    <p><a href="./">← 回 FoodLens 首頁</a></p>
+    <section id="login" class="container root-content" aria-labelledby="registerHeading">
+      <h2 id="registerHeading">會員註冊</h2>
+      <p>表單練習，請使用測試資料。</p>
+      <div id="googleSignIn"></div>
+      <p id="googleStatus" role="status"></p>
+      <p>或使用 Email 註冊</p>
+      <form id="registerForm" novalidate>
+        <p><label>姓名 <input name="username" required minlength="2" aria-describedby="registerNameError"></label>
+          <br><span id="registerNameError"></span></p>
+        <p><label>Email <input name="email" type="email" required aria-describedby="registerEmailError"></label>
+          <br><span id="registerEmailError"></span></p>
+        <p><label>密碼 <input name="password" type="password" required minlength="8" autocomplete="new-password" aria-describedby="registerPasswordError"></label>
+          <br><span id="registerPasswordError"></span></p>
+        <button type="submit">送出註冊練習</button>
+      </form>
+      <p id="registerResult" role="status"></p>
+    </section>
+  </main>
+</body>
+</html>
